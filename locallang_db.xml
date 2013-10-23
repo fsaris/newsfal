@@ -6,7 +6,7 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="tx_news_domain_model_news.tx_newsfal_image">Image</label>
+			<label index="media.addFileReference">Add media file</label>
 		</languageKey>
 	</data>
 </T3locallang>

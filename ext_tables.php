@@ -2,27 +2,101 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$tempColumns = array(
-	'tx_newsfal_image' => array(
+
+/**
+ * Add extra field fal_media to News domain record
+ */
+$newNewsColumns = array(
+	'fal_media' => array(
 		'exclude' => 0,
-		'label' => 'LLL:EXT:newsfal/locallang_db.xml:tx_news_domain_model_news.tx_newsfal_image',
+		'label' => 'LLL:EXT:news/Resources/Private/Language/locallang_db.xml:tx_news_domain_model_news.media',
 		'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
 			'file',
 			array(
 				'appearance' => array(
-					'createNewRelationLinkTitle' => 'LLL:EXT:cms/locallang_ttc.xlf:media.addFileReference',
-					'collapseAll' => FALSE,
+					'createNewRelationLinkTitle' => 'LLL:EXT:newsfal/locallang_db.xml:media.addFileReference',
+					'collapseAll' => TRUE,
+					'enabledControls' => array(
+						'sort' => TRUE,
+					),
 				),
-				'maxitems' => 10,
-				'minitems' => 0
+				// custom configuration for displaying fields in the overlay/reference table
+				// to use the newsPalette and imageoverlayPalette instead of the basicoverlayPalette
+				'foreign_types' => array(
+					'0' => array(
+						'showitem' => '
+							--palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;newsPalette,
+							--palette--;;imageoverlayPalette,
+							--palette--;;filePalette'
+					),
+					\TYPO3\CMS\Core\Resource\File::FILETYPE_TEXT => array(
+						'showitem' => '
+							--palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;newsPalette,
+							--palette--;;imageoverlayPalette,
+							--palette--;;filePalette'
+					),
+					\TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => array(
+						'showitem' => '
+							--palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;newsPalette,
+							--palette--;;imageoverlayPalette,
+							--palette--;;filePalette'
+					),
+					\TYPO3\CMS\Core\Resource\File::FILETYPE_AUDIO => array(
+						'showitem' => '
+							--palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;newsPalette,
+							--palette--;;imageoverlayPalette,
+							--palette--;;filePalette'
+					),
+					\TYPO3\CMS\Core\Resource\File::FILETYPE_VIDEO => array(
+						'showitem' => '
+							--palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;newsPalette,
+							--palette--;;imageoverlayPalette,
+							--palette--;;filePalette'
+					),
+					\TYPO3\CMS\Core\Resource\File::FILETYPE_APPLICATION => array(
+						'showitem' => '
+							--palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;newsPalette,
+							--palette--;;imageoverlayPalette,
+							--palette--;;filePalette'
+					)
+				)
 			),
-			'jpg,png,jpeg'
+			$GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
 		)
 	),
 );
 
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('tx_news_domain_model_news', $newNewsColumns, 1);
 
-t3lib_div::loadTCA('tx_news_domain_model_news');
-t3lib_extMgm::addTCAcolumns('tx_news_domain_model_news',$tempColumns,1);
-t3lib_extMgm::addToAllTCAtypes('tx_news_domain_model_news','tx_newsfal_image');
-?>
+// add or replace the old media field?
+if (TRUE) {
+	foreach ($GLOBALS['TCA']['tx_news_domain_model_news']['types'] as $key => $config) {
+		$GLOBALS['TCA']['tx_news_domain_model_news']['types'][$key]['showitem'] = str_replace(',media,', ',fal_media,', $config['showitem']);
+	}
+} else {
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tx_news_domain_model_news', 'fal_media');
+}
+
+
+/**
+ * Add extra field showinpreview and some special news controlls to sys_file_reference record
+ */
+$newSysFileReferenceColumns = array(
+	'showinpreview' => array(
+		'exclude' => 1,
+		'label' => 'LLL:EXT:news/Resources/Private/Language/locallang_db.xml:tx_news_domain_model_media.showinpreview',
+		'config' => array(
+			'type' => 'check',
+			'default' => 0
+		)
+	),
+);
+
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_file_reference', $newSysFileReferenceColumns, 1);
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('sys_file_reference', 'showinpreview');
+
+// add special news palette
+$GLOBALS['TCA']['sys_file_reference']['palettes']['newsPalette'] = array(
+	'showitem' => 'showinpreview',
+	'canNotCollapse' => TRUE
+);

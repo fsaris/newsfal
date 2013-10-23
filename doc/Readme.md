@@ -6,31 +6,35 @@ Adds FAL file field to news for further FE render via Fluid.
 
 ## Installation
 
-Just install the extension and it will add new image field to Your news.
+Just install the extension and it will add new media field to your news items.
 
 ## Use
 
-/Resources/Private/Partials/List/Item.html
-
-	<f:for each="{newsItem.txNewsfalImage}" as="image" key="number" iteration="itemIteration">
+All images
+/Resources/Private/Partials/Detail/Item.html
+	<f:for each="{newsItem.falMedia}" as="image">
+		<f:image src="{image.uid}" alt="{f:if(condition: '{image.originalResource.alternative}', then: '{image.originalResource.alternative}', else: '{image.originalResource.title}')}" width="200" treatIdAsReference="1"/>
 		<f:format.html>
-			number : {number}
 			image.uid : {image.uid}
-			image.public_url : {image.public_url}
-			image.title : {image.title}
-			image.alt : {image.alt}
-			image.description : {image.description} 
-			image.extension : {image.extension}
-			image.size : {image.size}
-			image.creation_time : {image.creation_time}
-			image.modification_time : {image.modification_time}
-			image.width : {image.width}
-			image.height : {image.height}
-			image.caption : {image.caption}
-			image.creator : {image.creator}	
+			image.identifier : {image.originalResource.identifier}
+			image.public_url : {image.originalResource.publicUrl}
+			image.title : {image.originalResource.title}
+			image.alternative : {image.originalResource.alternative}
+			image.description : {image.originalResource.description}
+			image.extension : {image.originalResource.extension}
+			image.type : {image.originalResource.type}
+			image.mimeType : {image.originalResource.mimeType}
+			image.size : {image.originalResource.size}
+			image.creationTime : {image.originalResource.creationTime}
+			image.modificationTime : {image.originalResource.modificationTime}
 		</f:format.html>
 	</f:for>
 
+Only the images marked as preview
+	<f:for each="{newsItem.falMediaPreviews}" as="image">
+		<f:image src="{image.uid}" alt="{f:if(condition: '{image.originalResource.alternative}', then: '{image.originalResource.alternative}', else: '{image.originalResource.title}')}" width="200" treatIdAsReference="1"/>
+	</f:for>
+	
 ## Ressources used during development
 
 * http://docs.typo3.org/typo3cms/extensions/news/latest/Main/Tutorial/ExtendingNews/Index.html
