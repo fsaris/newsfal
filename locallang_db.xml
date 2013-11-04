@@ -7,6 +7,7 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="media.addFileReference">Add media file</label>
+			<label index="related_files.addFileReference">Add releated file</label>
 		</languageKey>
 	</data>
 </T3locallang>

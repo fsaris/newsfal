@@ -18,6 +18,7 @@ All images
 			image.uid : {image.uid}
 			image.identifier : {image.originalResource.identifier}
 			image.public_url : {image.originalResource.publicUrl}
+			image.name : {image.originalResource.name}
 			image.title : {image.originalResource.title}
 			image.alternative : {image.originalResource.alternative}
 			image.description : {image.originalResource.description}
@@ -34,7 +35,7 @@ Only the images marked as preview
 	<f:for each="{newsItem.falMediaPreviews}" as="image">
 		<f:image src="{image.uid}" alt="{f:if(condition: '{image.originalResource.alternative}', then: '{image.originalResource.alternative}', else: '{image.originalResource.title}')}" width="200" treatIdAsReference="1"/>
 	</f:for>
-	
+
 ## Ressources used during development
 
 * http://docs.typo3.org/typo3cms/extensions/news/latest/Main/Tutorial/ExtendingNews/Index.html

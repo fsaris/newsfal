@@ -11,14 +11,10 @@ $newNewsColumns = array(
 		'exclude' => 0,
 		'label' => 'LLL:EXT:news/Resources/Private/Language/locallang_db.xml:tx_news_domain_model_news.media',
 		'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-			'file',
+			'media',
 			array(
 				'appearance' => array(
-					'createNewRelationLinkTitle' => 'LLL:EXT:newsfal/locallang_db.xml:media.addFileReference',
-					'collapseAll' => TRUE,
-					'enabledControls' => array(
-						'sort' => TRUE,
-					),
+					'createNewRelationLinkTitle' => 'LLL:EXT:newsfal/locallang_db.xml:media.addFileReference'
 				),
 				// custom configuration for displaying fields in the overlay/reference table
 				// to use the newsPalette and imageoverlayPalette instead of the basicoverlayPalette
@@ -64,6 +60,18 @@ $newNewsColumns = array(
 			$GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
 		)
 	),
+	'fal_related_files' => array(
+		'exclude' => 0,
+		'label' => 'LLL:EXT:news/Resources/Private/Language/locallang_db.xml:tx_news_domain_model_news.related_files',
+		'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
+			'related_files',
+			array(
+				'appearance' => array(
+					'createNewRelationLinkTitle' => 'LLL:EXT:newsfal/locallang_db.xml:related_files.addFileReference'
+				),
+			)
+		)
+	),
 );
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('tx_news_domain_model_news', $newNewsColumns, 1);
@@ -71,10 +79,11 @@ $newNewsColumns = array(
 // add or replace the old media field?
 if (TRUE) {
 	foreach ($GLOBALS['TCA']['tx_news_domain_model_news']['types'] as $key => $config) {
-		$GLOBALS['TCA']['tx_news_domain_model_news']['types'][$key]['showitem'] = str_replace(',media,', ',fal_media,', $config['showitem']);
+		$GLOBALS['TCA']['tx_news_domain_model_news']['types'][$key]['showitem'] = str_replace(array(',media,', ',related_files,'), array(',fal_media,', ',fal_related_files,'), $config['showitem']);
 	}
 } else {
 	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tx_news_domain_model_news', 'fal_media');
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tx_news_domain_model_news', 'fal_related_files');
 }
 
 

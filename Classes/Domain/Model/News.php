@@ -13,10 +13,18 @@ class Tx_Newsfal_Domain_Model_News extends Tx_News_Domain_Model_News {
 	/**
 	 * Fal media items with showinpreview set
 	 *
-	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+	 * @var array
 	 * @transient
 	 */
 	protected $falMediaPreviews;
+
+	/**
+	 * Fal related files
+	 *
+	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+	 * @lazy
+	 */
+	protected $falRelatedFiles;
 
 	/**
 	 * Get the Fal media items
@@ -30,18 +38,27 @@ class Tx_Newsfal_Domain_Model_News extends Tx_News_Domain_Model_News {
 	/**
 	 * Get the Fal media items
 	 *
-	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+	 * @var array
 	 */
 	public function getFalMediaPreviews() {
 		if ($this->falMediaPreviews === NULL) {
-			$this->falMediaPreviews = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+			$this->falMediaPreviews = array();
 			/** @var $mediaItem \TYPO3\CMS\Extbase\Domain\Model\FileReference */
 			foreach ($this->falMedia as $mediaItem) {
 				if ($mediaItem->getOriginalResource()->getProperty('showinpreview')) {
-					$this->falMediaPreviews->attach($mediaItem);
+					$this->falMediaPreviews[] = $mediaItem;
 				}
 			}
 		}
 		return $this->falMediaPreviews;
+	}
+
+	/**
+	 * Get Fal Related Files
+	 *
+	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+	 */
+	public function getFalRelatedFiles() {
+		return $this->falRelatedFiles;
 	}
 }

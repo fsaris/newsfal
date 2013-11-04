@@ -2,7 +2,8 @@
 # Add fal reference field to news record
 #
 CREATE TABLE tx_news_domain_model_news (
-	fal_media text
+	fal_media int(11) unsigned DEFAULT '0',
+	fal_related_files int(11) unsigned DEFAULT '0'
 );
 
 #
