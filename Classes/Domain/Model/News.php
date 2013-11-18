@@ -41,7 +41,7 @@ class Tx_Newsfal_Domain_Model_News extends Tx_News_Domain_Model_News {
 	 * @var array
 	 */
 	public function getFalMediaPreviews() {
-		if ($this->falMediaPreviews === NULL) {
+		if ($this->falMediaPreviews === NULL && $this->falMedia !== NULL) {
 			$this->falMediaPreviews = array();
 			/** @var $mediaItem \TYPO3\CMS\Extbase\Domain\Model\FileReference */
 			foreach ($this->falMedia as $mediaItem) {
