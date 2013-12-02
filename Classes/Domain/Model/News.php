@@ -54,6 +54,22 @@ class Tx_Newsfal_Domain_Model_News extends Tx_News_Domain_Model_News {
 	}
 
 	/**
+	 * Get first media element which is tagged as preview and is of type image
+	 *
+	 * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference
+	 */
+	public function getFirstFalImagePreview() {
+
+		$mediaElements = $this->getFalMediaPreviews();
+		if (is_array($mediaElements)) {
+			foreach ($mediaElements as $mediaElement) {
+					return $mediaElement;
+			}
+		}
+		return NULL;
+	}
+
+	/**
 	 * Get Fal Related Files
 	 *
 	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
